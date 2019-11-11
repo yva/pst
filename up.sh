@@ -14,12 +14,15 @@ EOL
 
 params=()
 export YVA_TOOLING_CR='yvatools.azurecr.io/'
+fixuid="$(id -u "$USERNAME")"
 while [[ $# -gt 0 ]]; do
     case "${1}" in
       '--from') shift; export YVA_TOOLING_FROM="$(realpath "$1")";;
       '--to') shift; export YVA_TOOLING_TO="$(realpath "$1")";;
       '--logs') shift; export YVA_TOOLING_LOGS="$(realpath "$1")";;
       '--local') export YVA_TOOLING_CR=;;
+      '--no-correct-perms') fixuid=;;
+      '--correct-perms') shift; fixuid="$(id -u "$1")";;
       *) params+=("$1");;
     esac
   shift;
@@ -36,11 +39,18 @@ if [ ! -e "$YVA_TOOLING_TO" ]; then
 fi
 
 [ -n "$YVA_TOOLING_LOGS" ] || export YVA_TOOLING_LOGS="$YVA_TOOLING_TO/logs"
-if [ ! -e "$YVA_TOOLING_LOGS" ]; then
-  echo "Logs path not found: $YVA_TOOLING_LOGS" >&2
-  exit 1
-fi
 
-export YVA_TOOLING_ARGS="${params[*]}"
+export YVA_TOOLING_ARGS="${params[*]} ${correctuid[*]}"
+
+function __fix_uid {
+  echo "Fixing docker created files permissions..."
+  docker run -ti --rm \
+    -v "${YVA_TOOLING_TO}:/result:rw" \
+    -v "${YVA_TOOLING_LOGS}:/logs" \
+    "${YVA_TOOLING_CR:-}files-connector/${YVA_TOOLING_VERSION:-master:latest}" \
+    ./scripts/_fix.perms.sh "$1" /result /logs
+}
+[ -z "$fixuid" ] || trap "__fix_uid $fixuid" EXIT
+
 [ -z "${YVA_TOOLING_CR:-}" ] || docker-compose pull
 docker-compose up --abort-on-container-exit
