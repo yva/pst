@@ -26,11 +26,21 @@ user@host:~/pst$./up.sh --from ~/archive --to ~/results
 
 ## Requirements
 
+### software
+
+ * docker
+ * docker-compose
+ * bash 3.4
+
+
+### permissions
+
 Archive should be available for reading for user uid:gid 10000:10000
 results & logs dirs shold be available for writing for user uid:gid 10000:10000
 For example you cat get access for all users:
-Structure: 
+
 ``` bash
+  # Structure: 
   # /srv/data
   # /srv/out
   # /srv/logs
