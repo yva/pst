@@ -4,19 +4,21 @@
 ```bash 
 # login to tooling repo using credentials provided by YVA
 user@host:~$ docker login yvatools.azurecr.io
-Username:
-Password:
+Username: ******
+Password: ******
 
 # get this repository
 user@host:~$ git clone https://github.com/yva/pst
 cd pst
 
 # start processing
+# due to long work times its better to use screen utility
+screen -S yva
 user@host:~/pst$./up.sh --from ~/archive --to ~/results
 
 ```
 
-## possible arguments
+## up.sh arguments
 
 * --from **dir**: path to *pst* archive folder, all files with pst extentions will be processed.
 * --to **dir**: path to *results* folder, after processing there will be several.
@@ -25,6 +27,7 @@ user@host:~/pst$./up.sh --from ~/archive --to ~/results
 * --rebuild: rebuid pst files summary information (use after PST archive updates)
 * --correct-perms **user**: set user for correcting permissions, default is the user who run script
 * --no-correct-perms: dont correct permissions after finish
+* -d daemon mode
 
 ## Requirements
 
