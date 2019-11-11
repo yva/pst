@@ -5,7 +5,7 @@ services:
     environment:
       LOGS: "/logs"
     volumes:
-      - ${YVA_TOOLING_TO}/logs/quotes:/logs
+      - ${YVA_TOOLING_LOGS}/quotes:/logs
     expose:
       - 5000
   parser: 
