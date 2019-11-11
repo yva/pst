@@ -1,5 +1,5 @@
 #!/bin/bash
-set -x
+
 function usage() {
   cat >&2 << EOL
 # Process folder with pst files 
