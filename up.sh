@@ -31,15 +31,15 @@ if [ ! -e "$YVA_TOOLING_FROM" ]; then
 fi
 
 if [ ! -e "$YVA_TOOLING_TO" ]; then
-  echo "PST path not found: $YVA_TOOLING_TO" >&2
-  exit 1
-fi
-[ -n "$YVA_TOOLING_LOGS" ] || export YVA_TOOLING_LOGS="$YVA_TOOLING_TO/logs"
-if [ ! -e "$YVA_TOOLING_LOGS" ]; then
-  echo "PST path not found: $YVA_TOOLING_LOGS" >&2
+  echo "Results path not found: $YVA_TOOLING_TO" >&2
   exit 1
 fi
 
+[ -n "$YVA_TOOLING_LOGS" ] || export YVA_TOOLING_LOGS="$YVA_TOOLING_TO/logs"
+if [ ! -e "$YVA_TOOLING_LOGS" ]; then
+  echo "Logs path not found: $YVA_TOOLING_LOGS" >&2
+  exit 1
+fi
 
 export YVA_TOOLING_ARGS="${params[*]}"
 [ -z "${YVA_TOOLING_CR:-}" ] || docker-compose pull
