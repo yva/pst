@@ -1,0 +1,19 @@
+version: "3.2"
+services:
+  quotes: 
+    image: "${YVA_TOOLING_CR:-}quotation-cleaner/${YVA_TOOLING_VERSION:-master:latest}"
+    environment:
+      LOGS: "/logs"
+    volumes:
+      - ${YVA_TOOLING_TO}/logs/quotes:/logs
+    expose:
+      - 5000
+  parser: 
+    image: "${YVA_TOOLING_CR:-}files-connector/${YVA_TOOLING_VERSION:-master:latest}"      
+    volumes:
+      - ${YVA_TOOLING_FROM}:/data
+      - ${YVA_TOOLING_TO}:/result
+      - ${YVA_TOOLING_LOGS}:/logs
+    command: ./scripts/_process.sh --from /data --to /result --logs /logs --quotes quotes:5000 ${YVA_TOOLING_ARGS:-}
+    depends_on:
+      - quotes
