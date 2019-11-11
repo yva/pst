@@ -18,11 +18,13 @@ user@host:~/pst$./up.sh --from ~/archive --to ~/results
 
 ## possible arguments
 
-* --from: path to pst archive, all files with pst extentions will be processed.
-* --to: path to results folder, after processing there will be several.
-* --logs: path to logs folder, if not set results folder will be used.
+* --from **dir**: path to *pst* archive folder, all files with pst extentions will be processed.
+* --to **dir**: path to *results* folder, after processing there will be several.
+* --logs **dir**: path to *logs* folder, if not set results folder will be used. be defaut *result folder*/logs
 * --force: reporcess files already processed
 * --rebuild: rebuid pst files summary information (use after PST archive updates)
+* --correct-perms **user**: set user for correcting permissions, default is the user who run script
+* --no-correct-perms: dont correct permissions after finish
 
 ## Requirements
 
@@ -33,20 +35,6 @@ user@host:~/pst$./up.sh --from ~/archive --to ~/results
  * bash 3.4
 
 
-### permissions
+## permissions
 
-Archive should be available for reading for user uid:gid 10000:10000
-results & logs dirs shold be available for writing for user uid:gid 10000:10000
-For example you cat get access for all users:
-
-``` bash
-  # Structure: 
-  # /srv/data
-  # /srv/out
-  # /srv/logs
-
-  cd /srv 
-  chmod ugo+rwx out logs
-  chmod ugo+rx data
-```
-  
+Docker user root user inside container, so after tooling complets is unuseful to get files which are owned by root. To prevent this tooling make chown to *results* and *logs* folders. This behavior can be managed by --correct-perms && --no-correct-perms parameters
