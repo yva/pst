@@ -40,7 +40,7 @@ fi
 
 [ -n "$YVA_TOOLING_LOGS" ] || export YVA_TOOLING_LOGS="$YVA_TOOLING_TO/logs"
 
-export YVA_TOOLING_ARGS="${params[*]} ${correctuid[*]}"
+export YVA_TOOLING_ARGS="${params[*]}"
 
 function __fix_uid {
   echo "Fixing docker created files permissions..."
