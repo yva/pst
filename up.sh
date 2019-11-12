@@ -17,6 +17,8 @@ export YVA_TOOLING_CR='yvatools.azurecr.io/'
 fixuid="$(id -u "$USERNAME")"
 daemon=
 compose_params=('--abort-on-container-exit')
+procs="$(( $(nproc) - 1 ))"; (( procs > 0 )) || procs=1
+
 while [[ $# -gt 0 ]]; do
     case "${1}" in
       '--from') shift; export YVA_TOOLING_FROM="$(realpath "$1")";;
@@ -25,6 +27,7 @@ while [[ $# -gt 0 ]]; do
       '--local') export YVA_TOOLING_CR=;;
       '--no-correct-perms') fixuid=;;
       '--correct-perms') shift; fixuid="$(id -u "$1")";;
+      '--parallel') shift; procs="$1";;
       '-d') compose_params=('-d'); daemon=1;;
       *) params+=("$1");;
     esac
@@ -41,6 +44,11 @@ mkdir -p "$YVA_TOOLING_TO" "$YVA_TOOLING_LOGS"
 if [ -n "$fixuid" ]; then 
   params+=('--correct-perms' "$fixuid")
 fi 
+
+if (( procs > 0)); then 
+  params+=('--parallel' "$procs")
+fi
+
 export YVA_TOOLING_ARGS="${params[*]}"
 
 #setup trap for fixing permisions from script (it allows to fix it after ctrl-c)
