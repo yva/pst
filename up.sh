@@ -14,7 +14,7 @@ EOL
 
 params=()
 export YVA_TOOLING_CR='yvatools.azurecr.io/'
-fixuid="$(id -u "$USERNAME")"
+fixuid="$(id -u)"
 daemon=
 compose_params=('--abort-on-container-exit')
 procs="$(( $(nproc) - 1 ))"; (( procs > 0 )) || procs=1
